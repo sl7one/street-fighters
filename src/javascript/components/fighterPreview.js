@@ -8,33 +8,31 @@ export function createFighterPreview(fighter, position) {
     });
 
     // todo: show fighter info (image, name, health, etc.)
-    if (fighter) {
-        const { name, health, defense, attack, source } = fighter;
-        const fighterImage = createElement({ tagName: 'img' });
-        fighterImage.src = source;
-        fighterImage.alt = name;
-        fighterImage.title = name;
+    if (!fighter) return fighterElement;
 
-        const fighterName = createElement({ tagName: 'h1' });
-        fighterName.textContent = name;
+    const { name, health, defense, attack, source } = fighter;
+    const fighterImage = createElement({ tagName: 'img' });
+    fighterImage.src = source;
+    fighterImage.alt = name;
+    fighterImage.title = name;
 
-        const fighterHelth = createElement({ tagName: 'p' });
-        fighterHelth.textContent = `Helth${health}`;
+    const fighterName = createElement({ tagName: 'h1' });
+    fighterName.textContent = name;
 
-        const fighterDefense = createElement({ tagName: 'p' });
-        fighterDefense.textContent = `Defense${defense}`;
+    const fighterHelth = createElement({ tagName: 'p' });
+    fighterHelth.textContent = `Helth${health}`;
 
-        const fighterAttack = createElement({ tagName: 'p' });
-        fighterAttack.textContent = `Attack${attack}`;
+    const fighterDefense = createElement({ tagName: 'p' });
+    fighterDefense.textContent = `Defense${defense}`;
 
-        fighterElement.prepend(fighterName);
-        fighterElement.append(fighterImage);
-        fighterElement.append(fighterHelth);
-        fighterElement.append(fighterDefense);
-        fighterElement.append(fighterAttack);
+    const fighterAttack = createElement({ tagName: 'p' });
+    fighterAttack.textContent = `Attack${attack}`;
 
-        return fighterElement;
-    }
+    fighterElement.prepend(fighterName);
+    fighterElement.append(fighterImage);
+    fighterElement.append(fighterHelth);
+    fighterElement.append(fighterDefense);
+    fighterElement.append(fighterAttack);
 
     return fighterElement;
 }
