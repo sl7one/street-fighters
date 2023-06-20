@@ -1,5 +1,6 @@
 {
     "name": "street-fighter",
+    "homepage": "https://sl7one.github.io/street-fighters/",
     "engines": {
         "node": ">=16",
         "npm": ">=8"
