@@ -33,6 +33,10 @@ export async function fight(firstFighter, secondFighter) {
         } = controls;
 
         const state = {
+            idIntervalFirst: null,
+            idIntervalSecond: null,
+            flagFirts: true,
+            flagSecond: true,
             healthFirstFighter: firstFighter.health,
             healthSecondFighter: secondFighter.health,
             healthBarFirstFighter: document.querySelector('#left-fighter-indicator'),
@@ -56,6 +60,20 @@ export async function fight(firstFighter, secondFighter) {
                 const dynamicWidth = this.healthSecondFighter / initWidth;
                 this.healthBarSecondFighter.style.transition = 'all 250ms ease-in';
                 this.healthBarSecondFighter.style.width = dynamicWidth <= 0 ? `${0}%` : `${dynamicWidth * 100}%`;
+            },
+            setFirstFighterInterval() {
+                this.flagFirts = false;
+                this.idIntervalFirst = setInterval(() => this.setFlagFirst(), 10000);
+            },
+            setSecondFighterInterval() {
+                this.flagSecond = false;
+                this.idIntervalSecond = setInterval(() => this.setFlagSecond(), 10000);
+            },
+            setFlagFirst() {
+                this.flagFirts = true;
+            },
+            setFlagSecond() {
+                this.flagSecond = true;
             }
         };
 
@@ -73,34 +91,51 @@ export async function fight(firstFighter, secondFighter) {
                 if (winner) {
                     cbResolve(winner);
                     document.removeEventListener('keyup', onKeyUp);
+                    clearInterval(state.idIntervalFirst);
+                    clearInterval(state.idIntervalSecond);
                     // document.removeEventListener('keydown', wrapper); //linter defining problem
                 }
             };
 
             if (pressed.has(PlayerOneAttack) && pressed.has(PlayerOneBlock)) return; // A+D
             if (pressed.has(PlayerTwoBlock) && pressed.has(PlayerTwoAttack)) return; // J+L
-            if (
-                pressed.has(PlayerOneCriticalHitCombination[0]) &&
-                pressed.has(PlayerOneCriticalHitCombination[1]) &&
-                pressed.has(PlayerOneCriticalHitCombination[2])
-            ) {
-                const { attack } = firstFighter;
-                const damage = 2 * attack;
-                state.damageToSecondFighter(damage);
-                getWinner();
-                return;
-            } // Q+W+E
-            if (
-                pressed.has(PlayerTwoCriticalHitCombination[0]) &&
-                pressed.has(PlayerTwoCriticalHitCombination[1]) &&
-                pressed.has(PlayerTwoCriticalHitCombination[2])
-            ) {
-                const { attack } = secondFighter;
-                const damage = 2 * attack;
-                state.damageToFirstFighter(damage);
-                getWinner();
-                return;
-            } // U+I+O
+
+            if (state.flagFirts) {
+                const executeCriticalHit = () => {
+                    if (
+                        pressed.has(PlayerOneCriticalHitCombination[0]) &&
+                        pressed.has(PlayerOneCriticalHitCombination[1]) &&
+                        pressed.has(PlayerOneCriticalHitCombination[2])
+                    ) {
+                        const { attack } = firstFighter;
+                        const damage = 2 * attack;
+                        state.damageToSecondFighter(damage);
+                        state.setFirstFighterInterval();
+                        getWinner();
+                    } // Q+W+E
+                };
+
+                executeCriticalHit();
+            }
+
+            if (state.flagSecond) {
+                const executeCriticalHit = () => {
+                    if (
+                        pressed.has(PlayerTwoCriticalHitCombination[0]) &&
+                        pressed.has(PlayerTwoCriticalHitCombination[1]) &&
+                        pressed.has(PlayerTwoCriticalHitCombination[2])
+                    ) {
+                        const { attack } = secondFighter;
+                        const damage = 2 * attack;
+                        state.damageToFirstFighter(damage);
+                        state.setSecondFighterInterval();
+                        getWinner();
+                    } // U+I+O
+                };
+
+                executeCriticalHit();
+            }
+
             if (pressed.has(PlayerOneAttack) && pressed.has(PlayerTwoBlock)) {
                 const damage = getDamage(firstFighter, secondFighter);
                 state.damageToSecondFighter(damage);
