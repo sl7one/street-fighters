@@ -15,18 +15,26 @@ export function createFighterPreview(fighter, position) {
     fighterImage.src = source;
     fighterImage.alt = name;
     fighterImage.title = name;
+    fighterImage.style.width = '250px';
+    fighterImage.style.height = '300px';
 
     const fighterName = createElement({ tagName: 'h1' });
     fighterName.textContent = name;
 
-    const fighterHelth = createElement({ tagName: 'p' });
-    fighterHelth.textContent = `Helth${health}`;
+    const fighterHelth = createElement({ tagName: 'span' });
+    fighterHelth.textContent = `Helth: ${health}`;
 
-    const fighterDefense = createElement({ tagName: 'p' });
-    fighterDefense.textContent = `Defense${defense}`;
+    const fighterDefense = createElement({ tagName: 'span' });
+    fighterDefense.textContent = `Defense: ${defense}`;
 
-    const fighterAttack = createElement({ tagName: 'p' });
-    fighterAttack.textContent = `Attack${attack}`;
+    const fighterAttack = createElement({ tagName: 'span' });
+    fighterAttack.textContent = `Attack: ${attack}`;
+    [fighterName, fighterHelth, fighterDefense, fighterAttack].forEach(element => {
+        const el = element;
+        el.style.fontFamily = 'sans-serif';
+        el.style.fontWeight = 600;
+        el.style.color = 'white';
+    });
 
     fighterElement.prepend(fighterName);
     fighterElement.append(fighterImage);
